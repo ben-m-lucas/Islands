@@ -20,31 +20,43 @@ namespace Islands
                     result++;
                 }
                 var connectedCoordinates = new List<Coordinate>();
-                GetConnectedCoordinates(coordinate, sea, connectedCoordinates);
+                GetIsland(coordinate, sea, connectedCoordinates);
                 countedCoordinates.AddRange(connectedCoordinates);
             }
             return result;
         }
 
-        private void GetConnectedCoordinates(Coordinate coordinate, char[,] sea, List<Coordinate> connectedCoordinates)
+        /// <summary>
+        /// Returns the coordinates for the entire island that the given coordinate is a part of
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <param name="sea"></param>
+        /// <param name="islandCoordinates"></param>
+        private void GetIsland(Coordinate coordinate, char[,] sea, List<Coordinate> islandCoordinates)
         {
-            if (connectedCoordinates.Contains(coordinate)) return;
+            if (islandCoordinates.Contains(coordinate)) return;
 
-            connectedCoordinates.Add(coordinate);
+            islandCoordinates.Add(coordinate);
             if (sea[coordinate.X, coordinate.Y] != 'X') return;
 
-            List<Coordinate> siblings = GetSiblingCoordinates(coordinate, sea);
+            List<Coordinate> siblings = GetConnectedCoordinates(coordinate, sea);
             foreach (Coordinate sibling in siblings)
             {
                 if (sea[sibling.X,sibling.Y] == 'X')
                 {
-                    GetConnectedCoordinates(sibling, sea, connectedCoordinates);
+                    GetIsland(sibling, sea, islandCoordinates);
                 }
             }
 
         }
 
-        private List<Coordinate> GetSiblingCoordinates(Coordinate coordinate, char[,] sea)
+        /// <summary>
+        /// Returns the immediately connected coordinates to the provided coordinate (N, S, E, W, NE, NW, SE, SW)
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <param name="sea"></param>
+        /// <returns></returns>
+        private List<Coordinate> GetConnectedCoordinates(Coordinate coordinate, char[,] sea)
         {
             var list = new List<Coordinate>
             {
