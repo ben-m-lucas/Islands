@@ -11,14 +11,15 @@ namespace Islands
             var countedCoordinates = new List<Coordinate>();
             int result = 0;
 
-            foreach (Coordinate coordinate in Coordinate.GetAllCoordinates(sea.GetLength(0), sea.GetLength(1)))
+            List<Coordinate> allCoordinates = Coordinate.GetAllCoordinates(sea.GetLength(0), sea.GetLength(1));
+            // We only need to analyze coordinates that are already land
+            foreach (Coordinate coordinate in allCoordinates.Where(x => sea[x.X, x.Y] == 'X'))
             {
                 if (countedCoordinates.Contains(coordinate)) continue;
 
-                if (sea[coordinate.X, coordinate.Y] == 'X')
-                {
-                    result++;
-                }
+                result++; 
+
+                //Any coordinates belonging to this island no longer need to be counted
                 var connectedCoordinates = new List<Coordinate>();
                 GetIsland(coordinate, sea, connectedCoordinates);
                 countedCoordinates.AddRange(connectedCoordinates);
@@ -37,8 +38,6 @@ namespace Islands
             if (islandCoordinates.Contains(coordinate)) return;
 
             islandCoordinates.Add(coordinate);
-            if (sea[coordinate.X, coordinate.Y] != 'X') return;
-
             List<Coordinate> siblings = GetConnectedCoordinates(coordinate, sea);
             foreach (Coordinate sibling in siblings)
             {
@@ -47,7 +46,6 @@ namespace Islands
                     GetIsland(sibling, sea, islandCoordinates);
                 }
             }
-
         }
 
         /// <summary>
