@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Islands;
+using FluentAssertions;
 
 namespace Islands.Tests
 {
@@ -27,7 +28,7 @@ namespace Islands.Tests
             };
 
             var result = _sut.GetIslandCount(sea);
-            Assert.AreEqual(4, result);
+            result.Should().Be(4);
         }
 
         [TestMethod]
@@ -40,7 +41,7 @@ namespace Islands.Tests
             };
 
             var result = _sut.GetIslandCount(sea);
-            Assert.AreEqual(1, result);
+            result.Should().Be(1);
         }
 
         [TestMethod]
@@ -56,8 +57,55 @@ namespace Islands.Tests
             };
 
             var result = _sut.GetIslandCount(sea);
-            Assert.AreEqual(3, result);
+            result.Should().Be(3);
+        }
 
+        [TestMethod]
+        public void CircularIslandTest()
+        {
+            char[,] sea = new char[,]
+            {
+                { ' ', ' ', 'X', ' ', ' '},
+                { ' ', 'X', ' ', 'X', ' '},
+                { 'X', ' ', 'X', ' ', 'X'},
+                { ' ', 'X', ' ', 'X', ' '},
+                { ' ', ' ', 'X', ' ', ' '},
+            };
+
+            var result = _sut.GetIslandCount(sea);
+            result.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void CircularIslandWithCornersTest()
+        {
+            char[,] sea = new char[,]
+            {
+                { 'X', ' ', 'X', ' ', 'X'},
+                { ' ', 'X', ' ', 'X', ' '},
+                { 'X', ' ', 'X', ' ', 'X'},
+                { ' ', 'X', ' ', 'X', ' '},
+                { 'X', ' ', 'X', ' ', 'X'},
+            };
+
+            var result = _sut.GetIslandCount(sea);
+            result.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void PlusShapedIslandWithDisconnectedCornersTest()
+        {
+            char[,] sea = new char[,]
+            {
+                { 'X', ' ', 'X', ' ', 'X'},
+                { ' ', ' ', 'X', ' ', ' '},
+                { 'X', 'X', 'X', 'X', 'X'},
+                { ' ', ' ', 'X', ' ', ' '},
+                { 'X', ' ', 'X', ' ', 'X'},
+            };
+
+            var result = _sut.GetIslandCount(sea);
+            result.Should().Be(5);
         }
     }
 }
